@@ -1,0 +1,1026 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #0e1117;
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 30px 0 20px;
+}
+
+.header h1 {
+  font-size: 2.2rem;
+  color: #00ff87;
+  margin-bottom: 8px;
+}
+
+.header p {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+/* Search Section */
+.search-section {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 24px 0 32px;
+  flex-wrap: wrap;
+}
+
+.search-section input {
+  padding: 12px 18px;
+  width: 400px;
+  max-width: 90vw;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #1a1e2a;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-section input:focus {
+  border-color: #00ff87;
+}
+
+.search-section button {
+  padding: 12px 28px;
+  border-radius: 8px;
+  border: none;
+  background: #00ff87;
+  color: #0e1117;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.search-section button:hover {
+  background: #00cc6a;
+  transform: translateY(-1px);
+}
+
+.search-section button:disabled {
+  background: #333;
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #333;
+  border-top-color: #00ff87;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading p {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+/* Error */
+.error {
+  text-align: center;
+  padding: 24px;
+  background: #2a1520;
+  border: 1px solid #ff4040;
+  border-radius: 8px;
+  color: #ff6b6b;
+  margin: 20px 0;
+}
+
+/* League Info */
+.league-info {
+  text-align: center;
+  margin-bottom: 28px;
+  padding: 16px;
+  background: #151922;
+  border-radius: 10px;
+  border: 1px solid #222;
+}
+
+.league-info h2 {
+  color: #00ff87;
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+}
+
+.league-info span {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+/* Team Cards */
+.teams-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.team-card {
+  background: #151922;
+  border-radius: 12px;
+  border: 1px solid #222;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.team-card:hover {
+  border-color: #333;
+}
+
+.team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #1a1e2a;
+  cursor: pointer;
+  user-select: none;
+}
+
+.team-header:hover {
+  background: #1e2335;
+}
+
+.team-header-left h3 {
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.team-header-left .manager {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.team-header-right {
+  text-align: right;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.team-stat {
+  text-align: center;
+}
+
+.team-stat .label {
+  font-size: 0.7rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.team-stat .value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.expand-icon {
+  color: #555;
+  font-size: 1.2rem;
+  transition: transform 0.2s;
+}
+
+.expand-icon.open {
+  transform: rotate(180deg);
+}
+
+/* Team Details */
+.team-details {
+  padding: 20px;
+}
+
+/* Suggestions */
+.suggestions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 700px) {
+  .suggestions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.suggestion-card {
+  background: #1a1e2a;
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid #2a2e3a;
+}
+
+.suggestion-card h4 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.suggestion-card h4.transfer-title {
+  color: #ff9800;
+}
+
+.suggestion-card h4.captain-title {
+  color: #4fc3f7;
+}
+
+.suggestion-card h4.bench-title {
+  color: #ce93d8;
+}
+
+/* Bench Order */
+.bench-order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bench-order-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: #151922;
+  border-radius: 6px;
+}
+
+.bench-order-num {
+  width: 24px;
+  height: 24px;
+  background: #ce93d8;
+  color: #0e1117;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.bench-player-name {
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.bench-meta {
+  margin-left: auto;
+  color: #666;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* Transfer */
+.transfer {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #252a36;
+}
+
+.transfer:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.transfer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.transfer-out {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.transfer-in {
+  color: #00ff87;
+  font-weight: 600;
+}
+
+.arrow {
+  color: #555;
+  font-size: 1.2rem;
+}
+
+.transfer-detail {
+  color: #888;
+  font-size: 0.82rem;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-info .pos-badge {
+  background: #2a2e3a;
+  color: #aaa;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.player-info .team-badge {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+/* Captain */
+.captain-pick {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.captain-icon {
+  width: 44px;
+  height: 44px;
+  background: #4fc3f7;
+  color: #0e1117;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.captain-details .captain-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.captain-details .captain-reason {
+  color: #888;
+  font-size: 0.82rem;
+  margin-top: 2px;
+}
+
+/* Squad Table */
+.squad-section h4 {
+  color: #aaa;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.squad-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.squad-table th {
+  text-align: left;
+  padding: 8px 10px;
+  color: #666;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #252a36;
+}
+
+.squad-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid #1e222e;
+}
+
+.squad-table tr.bench {
+  opacity: 0.5;
+}
+
+.squad-table tr:hover {
+  background: #1a1e2a;
+}
+
+.captain-badge {
+  background: #4fc3f7;
+  color: #0e1117;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 6px;
+}
+
+.vice-badge {
+  background: #666;
+  color: #0e1117;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 6px;
+}
+
+.pos-gkp { color: #f5c542; }
+.pos-def { color: #4fc3f7; }
+.pos-mid { color: #00ff87; }
+.pos-fwd { color: #ff6b6b; }
+
+/* Help text */
+.help-text {
+  color: #bbb;
+  padding: 40px 20px;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.help-text code {
+  background: #1a1e2a;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #00ff87;
+  font-size: 0.9rem;
+}
+
+/* About Section */
+.about-section {
+  margin-bottom: 32px;
+}
+
+.about-section h2 {
+  color: #00ff87;
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.about-section > p {
+  text-align: center;
+  color: #999;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feature-item {
+  background: #151922;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 18px;
+  text-align: left;
+  transition: border-color 0.2s;
+}
+
+.feature-item:hover {
+  border-color: #333;
+}
+
+.feature-icon {
+  font-size: 1.4rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.feature-item h3 {
+  font-size: 0.95rem;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.feature-item p {
+  color: #888;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+/* How-to */
+.how-to {
+  background: #151922;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.how-to h3 {
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+/* Comparison Button */
+.comparison-btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 24px;
+  border: 1px solid #00ff87;
+  background: transparent;
+  color: #00ff87;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.comparison-btn:hover {
+  background: #00ff87;
+  color: #0e1117;
+}
+
+/* Comparison Page */
+.comparison-page {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.comparison-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.comparison-header h2 {
+  color: #00ff87;
+  font-size: 1.8rem;
+  margin: 12px 0 4px;
+}
+
+.comparison-header p {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.back-btn {
+  padding: 8px 18px;
+  border: 1px solid #444;
+  background: transparent;
+  color: #aaa;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.back-btn:hover {
+  border-color: #00ff87;
+  color: #00ff87;
+}
+
+/* Comparison Card */
+.comparison-card {
+  background: #151922;
+  border-radius: 12px;
+  border: 1px solid #222;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.comparison-team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #1a1e2a;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.comparison-team-header h3 {
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+}
+
+.comparison-totals {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.comp-stat {
+  text-align: center;
+}
+
+.comp-label {
+  font-size: 0.7rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.comp-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.suggested-value {
+  color: #4fc3f7;
+}
+
+.comp-diff.positive .comp-value {
+  color: #00ff87;
+}
+
+.comp-diff.negative .comp-value {
+  color: #ff6b6b;
+}
+
+.comp-diff.neutral .comp-value {
+  color: #888;
+}
+
+/* Comparison Sections */
+.comparison-section {
+  padding: 16px 20px;
+  border-top: 1px solid #222;
+}
+
+.comparison-section h4 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #aaa;
+  margin-bottom: 12px;
+}
+
+/* Captain Comparison */
+.captain-compare-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: center;
+}
+
+.captain-compare-col {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.captain-compare-col .col-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.captain-compare-col .player-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.captain-compare-col .pts {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.actual-col {
+  background: #1e1522;
+}
+
+.actual-col .pts {
+  color: #ce93d8;
+}
+
+.suggested-col {
+  background: #152220;
+}
+
+.suggested-col .pts {
+  color: #00ff87;
+}
+
+.vs {
+  color: #555;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* Transfer Comparison */
+.transfer-compare-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #1a1e2a;
+  border-radius: 8px;
+}
+
+.transfer-compare-col {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.transfer-compare-col .col-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.transfer-compare-col .player-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.transfer-out-name {
+  color: #ff6b6b;
+}
+
+.transfer-in-name {
+  color: #00ff87;
+}
+
+.transfer-compare-col .pts {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.transfer-diff {
+  min-width: 50px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.transfer-diff.positive {
+  color: #00ff87;
+}
+
+.transfer-diff.negative {
+  color: #ff6b6b;
+}
+
+.transfer-diff.neutral {
+  color: #888;
+}
+
+.bench-note {
+  display: block;
+  font-size: 0.65rem;
+  color: #666;
+  font-weight: 400;
+}
+
+/* Squad Compare Grid */
+.squad-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .squad-compare-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.squad-compare-col h5 {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.compare-table th {
+  text-align: left;
+  padding: 6px 8px;
+  color: #555;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  border-bottom: 1px solid #252a36;
+}
+
+.compare-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid #1e222e;
+  color: #ccc;
+}
+
+.compare-table .pts-cell {
+  text-align: right;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ── Compact Comparison Table ── */
+.comparison-league-block {
+  margin-bottom: 36px;
+}
+
+.league-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.league-title-row h3 {
+  color: #00ff87;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.gw-range-badge {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.compact-table-wrap {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #222;
+}
+
+.compact-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.compact-compare-table th,
+.compact-compare-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #1e222e;
+}
+
+.compact-compare-table thead th {
+  background: #1a1e2a;
+  color: #888;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid #2a2e3a;
+}
+
+.sub-header-row th {
+  font-size: 0.65rem !important;
+  color: #555 !important;
+  padding: 2px 10px !important;
+  background: #161a24 !important;
+}
+
+.sub-h {
+  text-align: center;
+}
+
+.sticky-col {
+  position: sticky;
+  left: 0;
+  background: #151922;
+  z-index: 1;
+}
+
+thead .sticky-col {
+  background: #1a1e2a;
+  z-index: 2;
+}
+
+.sub-header-row .sticky-col {
+  background: #161a24 !important;
+}
+
+.team-cell-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.team-name-text {
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.manager-text {
+  font-size: 0.7rem;
+  color: #666;
+}
+
+.compact-compare-table .pts-cell {
+  text-align: center;
+  color: #ccc;
+  font-weight: 400;
+}
+
+.compact-compare-table .total-val {
+  font-weight: 700;
+  color: #fff;
+}
+
+.compact-compare-table .diff-val {
+  font-weight: 800;
+  text-align: center;
+}
+
+.compact-compare-table .positive { color: #00ff87; }
+.compact-compare-table .negative { color: #ff6b6b; }
+
+.gw-col-header {
+  text-align: center;
+  border-left: 1px solid #2a2e3a;
+}
+
+.total-col-header {
+  text-align: center;
+  border-left: 2px solid #333;
+}
+
+.diff-col-header {
+  text-align: center;
+  border-left: 2px solid #333;
+}
+
+/* ── Example ID Buttons ── */
+.example-ids {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.example-ids span {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.example-ids button {
+  padding: 6px 16px;
+  border: 1px solid #333;
+  background: #1a1e2a;
+  color: #00ff87;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.example-ids button:hover {
+  background: #222;
+  border-color: #00ff87;
+}
