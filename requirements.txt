@@ -1,0 +1,5 @@
+flask>=3.1
+flask-cors>=6.0
+requests>=2.32
+gunicorn>=23.0
+urllib3>=2.0

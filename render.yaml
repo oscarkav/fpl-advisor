@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: fpl-advisor
+    runtime: python
+    buildCommand: bash build.sh
+    startCommand: gunicorn backend.app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: NODE_VERSION
+        value: "20"

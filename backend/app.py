@@ -585,6 +585,243 @@ def api_comparison(league_id):
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/api/league/demo")
+def api_league_demo():
+    """Demo endpoint with mock data based on 2025/26 season players."""
+    import random
+
+    # Mock player data based on real 2025/26 FPL season stats
+    MOCK_PLAYERS = [
+        # GKP (actual 25/26 prices and points)
+        {"id": 1, "name": "Raya", "full_name": "David Raya", "team_name": "ARS", "position": "GKP", "element_type": 1, "price": 6.0, "form": 4.4, "ppg": 4.4, "total_points": 162, "ict": 57.5},
+        {"id": 2, "name": "Donnarumma", "full_name": "Gianluigi Donnarumma", "team_name": "MCI", "position": "GKP", "element_type": 1, "price": 5.5, "form": 4.0, "ppg": 4.0, "total_points": 135, "ict": 68.0},
+        {"id": 3, "name": "Pickford", "full_name": "Jordan Pickford", "team_name": "EVE", "position": "GKP", "element_type": 1, "price": 5.5, "form": 3.6, "ppg": 3.6, "total_points": 135, "ict": 90.8},
+        {"id": 4, "name": "Kelleher", "full_name": "Caoimhín Kelleher", "team_name": "BRE", "position": "GKP", "element_type": 1, "price": 5.0, "form": 3.9, "ppg": 3.9, "total_points": 143, "ict": 93.8},
+        {"id": 5, "name": "Martinez", "full_name": "Emiliano Martínez", "team_name": "AVL", "position": "GKP", "element_type": 1, "price": 5.0, "form": 3.8, "ppg": 3.8, "total_points": 120, "ict": 79.2},
+        {"id": 6, "name": "Henderson", "full_name": "Dean Henderson", "team_name": "CRY", "position": "GKP", "element_type": 1, "price": 5.0, "form": 3.5, "ppg": 3.5, "total_points": 131, "ict": 84.7},
+        # DEF (actual 25/26 prices and points)
+        {"id": 10, "name": "Gabriel", "full_name": "Gabriel Magalhães", "team_name": "ARS", "position": "DEF", "element_type": 2, "price": 8.0, "form": 6.5, "ppg": 6.5, "total_points": 209, "ict": 125.0},
+        {"id": 11, "name": "Guéhi", "full_name": "Marc Guéhi", "team_name": "MCI", "position": "DEF", "element_type": 2, "price": 6.0, "form": 5.1, "ppg": 5.1, "total_points": 179, "ict": 160.9},
+        {"id": 12, "name": "Virgil", "full_name": "Virgil van Dijk", "team_name": "LIV", "position": "DEF", "element_type": 2, "price": 6.5, "form": 4.6, "ppg": 4.6, "total_points": 175, "ict": 187.6},
+        {"id": 13, "name": "Senesi", "full_name": "Marcos Senesi", "team_name": "TOT", "position": "DEF", "element_type": 2, "price": 6.0, "form": 4.7, "ppg": 4.7, "total_points": 175, "ict": 168.6},
+        {"id": 14, "name": "Tarkowski", "full_name": "James Tarkowski", "team_name": "EVE", "position": "DEF", "element_type": 2, "price": 6.0, "form": 4.6, "ppg": 4.6, "total_points": 170, "ict": 165.7},
+        {"id": 15, "name": "O'Reilly", "full_name": "Callum O'Reilly", "team_name": "MCI", "position": "DEF", "element_type": 2, "price": 6.5, "form": 4.7, "ppg": 4.7, "total_points": 160, "ict": 164.1},
+        {"id": 16, "name": "Lacroix", "full_name": "Maxence Lacroix", "team_name": "CRY", "position": "DEF", "element_type": 2, "price": 6.0, "form": 4.4, "ppg": 4.4, "total_points": 154, "ict": 124.3},
+        {"id": 17, "name": "Matheus N.", "full_name": "Matheus Nunes", "team_name": "MCI", "position": "DEF", "element_type": 2, "price": 6.0, "form": 4.5, "ppg": 4.5, "total_points": 154, "ict": 137.6},
+        {"id": 18, "name": "Timber", "full_name": "Jurriën Timber", "team_name": "ARS", "position": "DEF", "element_type": 2, "price": 6.5, "form": 5.0, "ppg": 5.0, "total_points": 149, "ict": 125.7},
+        {"id": 19, "name": "Saliba", "full_name": "William Saliba", "team_name": "ARS", "position": "DEF", "element_type": 2, "price": 6.0, "form": 4.4, "ppg": 4.4, "total_points": 137, "ict": 84.3},
+        # MID (actual 25/26 prices and points)
+        {"id": 30, "name": "B.Fernandes", "full_name": "Bruno Fernandes", "team_name": "MUN", "position": "MID", "element_type": 3, "price": 12.0, "form": 6.7, "ppg": 6.7, "total_points": 235, "ict": 381.4},
+        {"id": 31, "name": "Semenyo", "full_name": "Antoine Semenyo", "team_name": "MCI", "position": "MID", "element_type": 3, "price": 8.5, "form": 5.5, "ppg": 5.5, "total_points": 202, "ict": 257.7},
+        {"id": 32, "name": "Gibbs-White", "full_name": "Morgan Gibbs-White", "team_name": "NFO", "position": "MID", "element_type": 3, "price": 8.0, "form": 5.1, "ppg": 5.1, "total_points": 188, "ict": 242.5},
+        {"id": 33, "name": "Rice", "full_name": "Declan Rice", "team_name": "ARS", "position": "MID", "element_type": 3, "price": 7.5, "form": 5.1, "ppg": 5.1, "total_points": 184, "ict": 215.4},
+        {"id": 34, "name": "Rogers", "full_name": "Morgan Rogers", "team_name": "CHE", "position": "MID", "element_type": 3, "price": 7.5, "form": 4.6, "ppg": 4.6, "total_points": 169, "ict": 232.0},
+        {"id": 35, "name": "Saka", "full_name": "Bukayo Saka", "team_name": "ARS", "position": "MID", "element_type": 3, "price": 9.5, "form": 5.1, "ppg": 5.1, "total_points": 157, "ict": 230.6},
+        {"id": 36, "name": "Mbeumo", "full_name": "Bryan Mbeumo", "team_name": "MUN", "position": "MID", "element_type": 3, "price": 8.0, "form": 4.5, "ppg": 4.5, "total_points": 148, "ict": 231.4},
+        {"id": 37, "name": "Cunha", "full_name": "Matheus Cunha", "team_name": "MUN", "position": "MID", "element_type": 3, "price": 8.0, "form": 4.3, "ppg": 4.3, "total_points": 143, "ict": 202.5},
+        {"id": 38, "name": "Cherki", "full_name": "Rayan Cherki", "team_name": "MCI", "position": "MID", "element_type": 3, "price": 7.5, "form": 4.1, "ppg": 4.1, "total_points": 135, "ict": 218.1},
+        {"id": 39, "name": "Wirtz", "full_name": "Florian Wirtz", "team_name": "LIV", "position": "MID", "element_type": 3, "price": 7.5, "form": 3.8, "ppg": 3.8, "total_points": 125, "ict": 210.0},
+        {"id": 40, "name": "Palmer", "full_name": "Cole Palmer", "team_name": "CHE", "position": "MID", "element_type": 3, "price": 9.5, "form": 4.4, "ppg": 4.4, "total_points": 114, "ict": 147.7},
+        # FWD (actual 25/26 prices and points)
+        {"id": 50, "name": "Haaland", "full_name": "Erling Haaland", "team_name": "MCI", "position": "FWD", "element_type": 4, "price": 15.5, "form": 6.8, "ppg": 6.8, "total_points": 239, "ict": 302.3},
+        {"id": 51, "name": "Thiago", "full_name": "Ivan Thiago", "team_name": "BRE", "position": "FWD", "element_type": 4, "price": 8.0, "form": 4.8, "ppg": 4.8, "total_points": 181, "ict": 256.9},
+        {"id": 52, "name": "João Pedro", "full_name": "João Pedro", "team_name": "CHE", "position": "FWD", "element_type": 4, "price": 7.5, "form": 5.1, "ppg": 5.1, "total_points": 177, "ict": 212.1},
+        {"id": 53, "name": "Watkins", "full_name": "Ollie Watkins", "team_name": "AVL", "position": "FWD", "element_type": 4, "price": 8.0, "form": 4.5, "ppg": 4.5, "total_points": 167, "ict": 225.2},
+        {"id": 54, "name": "Gyökeres", "full_name": "Viktor Gyökeres", "team_name": "ARS", "position": "FWD", "element_type": 4, "price": 7.5, "form": 3.6, "ppg": 3.6, "total_points": 128, "ict": 157.5},
+        {"id": 55, "name": "Mateta", "full_name": "Jean-Philippe Mateta", "team_name": "CRY", "position": "FWD", "element_type": 4, "price": 6.5, "form": 3.6, "ppg": 3.6, "total_points": 114, "ict": 150.8},
+        {"id": 56, "name": "Šeško", "full_name": "Benjamin Šeško", "team_name": "MUN", "position": "FWD", "element_type": 4, "price": 7.0, "form": 3.7, "ppg": 3.7, "total_points": 111, "ict": 143.4},
+    ]
+
+    MOCK_TEAMS = ["ARS", "LIV", "MCI", "CHE", "TOT", "NEW", "AVL", "MUN", "BRE", "EVE", "CRY", "NFO"]
+
+    MOCK_MANAGERS = [
+        ("Oscar K", "Triple Captain FC"),
+        ("Erik L", "Bald Fraud XI"),
+        ("Anna S", "Set & Forget"),
+        ("Johan B", "Free Hit Warriors"),
+        ("Lisa M", "Wildcard Wednesday"),
+        ("Marcus R", "Bench Boost Bros"),
+        ("Sofia W", "Deadline Panic"),
+        ("Daniel P", "Template FC"),
+    ]
+
+    FIXTURE_DIFFICULTY = {t: round(random.uniform(2.0, 4.5), 1) for t in MOCK_TEAMS}
+
+    def pick_squad():
+        """Pick a random valid squad: 2 GKP, 5 DEF, 5 MID, 3 FWD."""
+        by_pos = {1: [], 2: [], 3: [], 4: []}
+        for p in MOCK_PLAYERS:
+            by_pos[p["element_type"]].append(p)
+
+        gkps = random.sample(by_pos[1], 2)
+        defs = random.sample(by_pos[2], 5)
+        mids = random.sample(by_pos[3], 5)
+        fwds = random.sample(by_pos[4], 3)
+
+        # 1 GKP + 4 DEF + 4 MID + 2 FWD = 11 starters
+        starting = [gkps[0]] + defs[:4] + mids[:4] + fwds[:2]
+        bench = [gkps[1]] + [defs[4]] + [mids[4]] + [fwds[2]]
+        return starting, bench
+
+    def mock_suggest_transfers(starting, bench):
+        """Pick the weakest starter and suggest a better replacement."""
+        all_squad_ids = {p["id"] for p in starting + bench}
+        # Sort starters by form, pick weakest
+        sorted_starters = sorted(starting[1:], key=lambda p: p["form"])  # skip GKP
+        transfers = []
+        for weak in sorted_starters[:2]:
+            candidates = [p for p in MOCK_PLAYERS if p["element_type"] == weak["element_type"] and p["id"] not in all_squad_ids]
+            candidates.sort(key=lambda p: p["form"], reverse=True)
+            if candidates:
+                repl = candidates[0]
+                transfers.append({
+                    "out": {"id": weak["id"], "name": weak["name"], "team": weak["team_name"], "position": weak["position"], "price": weak["price"], "form": weak["form"], "score": round(weak["form"] * 2, 2)},
+                    "in": {"id": repl["id"], "name": repl["name"], "team": repl["team_name"], "position": repl["position"], "price": repl["price"], "form": repl["form"], "score": round(repl["form"] * 2.5, 2)},
+                    "reason": f"Upgrade {weak['position']}: {weak['name']} (form {weak['form']}) → {repl['name']} (form {repl['form']}, easier fixtures)"
+                })
+                all_squad_ids.add(repl["id"])
+        return transfers
+
+    def mock_captain(starting):
+        """Pick best captain from starters."""
+        best = max(starting[1:], key=lambda p: p["form"] * 2 + p["ppg"])
+        fdr = FIXTURE_DIFFICULTY.get(best["team_name"], 3.0)
+        return {
+            "id": best["id"],
+            "name": best["name"],
+            "team": best["team_name"],
+            "position": best["position"],
+            "form": best["form"],
+            "price": best["price"],
+            "score": round(best["form"] * 2.5 + best["ppg"], 2),
+            "reason": f"Best form ({best['form']}) with favorable fixtures (FDR avg {fdr})"
+        }
+
+    def mock_bench_order(bench):
+        """Order bench by form."""
+        outfield = [p for p in bench if p["element_type"] != 1]
+        outfield.sort(key=lambda p: p["form"], reverse=True)
+        return [
+            {"order": i + 1, "name": p["name"], "team": p["team_name"], "position": p["position"], "form": p["form"], "price": p["price"], "score": round(p["form"] * 2, 2)}
+            for i, p in enumerate(outfield)
+        ]
+
+    # Generate mock league
+    results = []
+    for i, (manager, team_name) in enumerate(MOCK_MANAGERS):
+        starting, bench = pick_squad()
+        transfers = mock_suggest_transfers(starting, bench)
+        captain = mock_captain(starting)
+        bench_order = mock_bench_order(bench)
+
+        captain_player = random.choice(starting[1:])
+        squad_details = []
+        for j, p in enumerate(starting):
+            squad_details.append({
+                "name": p["name"], "team": p["team_name"], "position": p["position"],
+                "price": p["price"], "form": p["form"], "total_points": p["total_points"],
+                "is_captain": p["id"] == captain_player["id"],
+                "is_vice": j == 1 and p["id"] != captain_player["id"],
+                "is_starter": True,
+            })
+        for p in bench:
+            squad_details.append({
+                "name": p["name"], "team": p["team_name"], "position": p["position"],
+                "price": p["price"], "form": p["form"], "total_points": p["total_points"],
+                "is_captain": False, "is_vice": False, "is_starter": False,
+            })
+
+        results.append({
+            "team_id": 1000 + i,
+            "manager": manager,
+            "team_name": team_name,
+            "rank": i + 1,
+            "total_points": random.randint(1800, 2400),
+            "bank": round(random.uniform(0, 3.0), 1),
+            "current_captain": captain_player["name"],
+            "squad": squad_details,
+            "transfers": transfers,
+            "captain_suggestion": captain,
+            "bench_order": bench_order,
+            "comparison": {
+                "actual_total": random.randint(45, 75),
+                "suggested_total": random.randint(55, 85),
+                "difference": random.randint(2, 15),
+                "actual_details": [],
+                "suggested_details": [],
+                "transfer_comparison": [],
+                "captain_comparison": None,
+            },
+        })
+
+    return jsonify({
+        "league_name": "Demo League (2025/26 Season Mock)",
+        "gameweek": 38,
+        "teams": results,
+    })
+
+
+@app.route("/api/league/bestxi")
+def api_league_bestxi():
+    """Best XI from the 2025/26 season based on actual FPL total points."""
+    best_squad = [
+        # GKP - Raya (162pts, £6.0)
+        {"name": "Raya", "team": "ARS", "position": "GKP", "price": 6.0, "form": 4.4, "total_points": 162, "is_captain": False, "is_vice": False, "is_starter": True},
+        # DEF - sorted by total points
+        {"name": "Gabriel", "team": "ARS", "position": "DEF", "price": 8.0, "form": 6.5, "total_points": 209, "is_captain": False, "is_vice": False, "is_starter": True},
+        {"name": "Guéhi", "team": "MCI", "position": "DEF", "price": 6.0, "form": 5.1, "total_points": 179, "is_captain": False, "is_vice": False, "is_starter": True},
+        {"name": "Virgil", "team": "LIV", "position": "DEF", "price": 6.5, "form": 4.6, "total_points": 175, "is_captain": False, "is_vice": False, "is_starter": True},
+        {"name": "Senesi", "team": "TOT", "position": "DEF", "price": 6.0, "form": 4.7, "total_points": 175, "is_captain": False, "is_vice": False, "is_starter": True},
+        # MID - sorted by total points
+        {"name": "B.Fernandes", "team": "MUN", "position": "MID", "price": 12.0, "form": 6.7, "total_points": 235, "is_captain": True, "is_vice": False, "is_starter": True},
+        {"name": "Semenyo", "team": "MCI", "position": "MID", "price": 8.5, "form": 5.5, "total_points": 202, "is_captain": False, "is_vice": True, "is_starter": True},
+        {"name": "Gibbs-White", "team": "NFO", "position": "MID", "price": 8.0, "form": 5.1, "total_points": 188, "is_captain": False, "is_vice": False, "is_starter": True},
+        {"name": "Rice", "team": "ARS", "position": "MID", "price": 7.5, "form": 5.1, "total_points": 184, "is_captain": False, "is_vice": False, "is_starter": True},
+        # FWD - sorted by total points
+        {"name": "Haaland", "team": "MCI", "position": "FWD", "price": 15.5, "form": 6.8, "total_points": 239, "is_captain": False, "is_vice": False, "is_starter": True},
+        {"name": "Thiago", "team": "BRE", "position": "FWD", "price": 8.0, "form": 4.8, "total_points": 181, "is_captain": False, "is_vice": False, "is_starter": True},
+        # BENCH
+        {"name": "Kelleher", "team": "BRE", "position": "GKP", "price": 5.0, "form": 3.9, "total_points": 143, "is_captain": False, "is_vice": False, "is_starter": False},
+        {"name": "Tarkowski", "team": "EVE", "position": "DEF", "price": 6.0, "form": 4.6, "total_points": 170, "is_captain": False, "is_vice": False, "is_starter": False},
+        {"name": "Rogers", "team": "CHE", "position": "MID", "price": 7.5, "form": 4.6, "total_points": 169, "is_captain": False, "is_vice": False, "is_starter": False},
+        {"name": "Watkins", "team": "AVL", "position": "FWD", "price": 8.0, "form": 4.5, "total_points": 167, "is_captain": False, "is_vice": False, "is_starter": False},
+    ]
+
+    total_value = sum(p["price"] for p in best_squad)
+    total_pts = sum(p["total_points"] for p in best_squad if p["is_starter"])
+
+    return jsonify({
+        "league_name": "\u2b50 Best XI 2025/26 Season",
+        "gameweek": 38,
+        "teams": [{
+            "team_id": 9999,
+            "manager": "FPL Advisor",
+            "team_name": "Season Best XI",
+            "rank": 1,
+            "total_points": total_pts,
+            "bank": round(100 - total_value, 1),
+            "current_captain": "B.Fernandes",
+            "squad": best_squad,
+            "transfers": [],
+            "captain_suggestion": {
+                "id": 30, "name": "B.Fernandes", "team": "MUN", "position": "MID",
+                "form": 6.7, "price": 12.0, "score": 28.0,
+                "reason": "Top scorer of the 2025/26 season with 235 points"
+            },
+            "bench_order": [
+                {"order": 1, "name": "Tarkowski", "team": "EVE", "position": "DEF", "form": 4.6, "price": 6.0, "score": 9.2},
+                {"order": 2, "name": "Rogers", "team": "CHE", "position": "MID", "form": 4.6, "price": 7.5, "score": 9.2},
+                {"order": 3, "name": "Watkins", "team": "AVL", "position": "FWD", "form": 4.5, "price": 8.0, "score": 9.0},
+            ],
+            "comparison": {
+                "actual_total": 0, "suggested_total": 0, "difference": 0,
+                "actual_details": [], "suggested_details": [],
+                "transfer_comparison": [], "captain_comparison": None,
+            },
+        }],
+    })
+
+
 @app.route("/api/health")
 def health():
     return jsonify({"status": "ok"})
@@ -601,4 +838,5 @@ def serve_frontend(path):
 
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)

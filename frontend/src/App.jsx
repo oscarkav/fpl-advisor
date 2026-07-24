@@ -73,7 +73,7 @@ function App() {
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <button onClick={handleSearch} disabled={loading || !input.trim()}>
+        <button onClick={() => handleSearch()} disabled={loading || !input.trim()}>
           {loading ? 'Analysing...' : 'Analyse League'}
         </button>
       </div>
@@ -95,16 +95,24 @@ function App() {
           <div className="league-info">
             <h2>{data.league_name}</h2>
             <span>Gameweek {data.gameweek} &middot; {data.teams.length} teams</span>
-            <button className="comparison-btn" onClick={() => setPage('comparison')}>
-              📊 Verify Suggestions
-            </button>
+            {data.teams.length > 0 && (
+              <button className="comparison-btn" onClick={() => setPage('comparison')}>
+                📊 Verify Suggestions
+              </button>
+            )}
           </div>
 
-          <div className="teams-grid">
-            {data.teams.map(team => (
-              <TeamCard key={team.team_id} team={team} />
-            ))}
-          </div>
+          {data.teams.length === 0 ? (
+            <div className="error" style={{ background: '#fff3cd', color: '#856404', borderColor: '#ffc107' }}>
+              <strong>No data available yet.</strong> The season hasn't started or no teams have made picks for Gameweek {data.gameweek}. Check back once the first gameweek kicks off!
+            </div>
+          ) : (
+            <div className="teams-grid">
+              {data.teams.map(team => (
+                <TeamCard key={team.team_id} team={team} />
+              ))}
+            </div>
+          )}
         </>
       )}
 
@@ -148,8 +156,9 @@ function App() {
             </p>
             <div className="example-ids">
               <span>Prova en liga:</span>
-              <button onClick={() => handleSearch('547702')}>547702</button>
-              <button onClick={() => handleSearch('1385234')}>1385234</button>
+              <button onClick={() => handleSearch('demo')}>🎮 Demo (mock data)</button>
+              <button onClick={() => handleSearch('bestxi')}>⭐ Best XI 25/26</button>
+              <button onClick={() => handleSearch('314')}>Overall (314)</button>
             </div>
           </div>
         </div>
