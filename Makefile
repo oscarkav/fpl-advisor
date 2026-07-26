@@ -8,16 +8,19 @@ install-frontend:
 install-backend:
 	cd backend && uv sync
 
-frontend:
+dev-frontend:
 	cd frontend && pnpm dev
 
-backend:
+dev-backend:
 	cd backend && uv run flask --app app:create_app run --debug
+
+frontend:
+	cd frontend && pnpm build
 
 dev:
 	@trap 'kill 0' INT TERM EXIT; \
-	$(MAKE) backend & \
-	$(MAKE) frontend & \
+	$(MAKE) dev-backend & \
+	$(MAKE) dev-frontend & \
 	wait
 
 clean:

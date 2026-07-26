@@ -7,7 +7,7 @@ import requests
 import ssl
 
 # Serve React build from frontend/dist
-STATIC_DIR = os.path.join(os.path.dirname(__file__), '..', 'frontend', 'dist')
+STATIC_DIR = os.path.join(os.path.dirname(__file__), 'static')
 BASE_URL = "https://fantasy.premierleague.com/api"
 PORT = int(os.environ.get("PORT", 5000))
 
