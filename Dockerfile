@@ -8,7 +8,7 @@ RUN pnpm build
 
 FROM ghcr.io/astral-sh/uv:0.11.32-python3.13-trixie AS backend-build
 WORKDIR /app
-COPY backend/pyproject.toml backend/uv.lock ./
+COPY backend/pyproject.toml backend/uv.lock README.md ./
 RUN uv sync --locked --no-dev
 COPY backend .
 RUN uv sync --locked --no-dev
