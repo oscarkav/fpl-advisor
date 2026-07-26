@@ -1,27 +1,27 @@
 .PHONY: install install-frontend install-backend frontend backend test dev clean
 
-install: install-frontend install-backend
+install: install-root install-frontend install-backend
+
+install-root:
+	pnpm i
 
 install-frontend:
-	cd frontend && pnpm install
+	pnpm --filter frontend install
 
 install-backend:
 	cd backend && uv sync
 
 dev-frontend:
-	cd frontend && pnpm dev
+	pnpm --filter frontend dev
 
 dev-backend:
 	cd backend && uv run flask --app app:create_app run --debug
 
 frontend:
-	cd frontend && pnpm build
+	pnpm --filter frontend build
 
 dev:
-	@trap 'kill 0' INT TERM EXIT; \
-	$(MAKE) dev-backend & \
-	$(MAKE) dev-frontend & \
-	wait
+	pnpm dev
 
 clean:
 	rm -rf backend/.venv

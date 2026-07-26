@@ -42,3 +42,10 @@ This make command will be using the `uv sync` command under the hood.
 ```bash
 make install-backend
 ```
+
+but just running the general install command works.
+
+
+```bash
+make install
+```
