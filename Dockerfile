@@ -19,4 +19,4 @@ COPY --from=backend-build /app /app
 WORKDIR /app
 COPY --from=frontend-build /app/frontend/dist ./src/app/static
 EXPOSE 10000
-CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:create_app()"]
+CMD ["sh", "-c", "exec gunicorn --bind 0.0.0.0:${PORT:-10000} 'app:create_app()'"]
