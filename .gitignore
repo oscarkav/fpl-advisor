@@ -5,3 +5,7 @@ venv/
 .venv/
 frontend/node_modules/
 frontend/dist/
+
+# vscode
+.vscode
+!.vscode/settings.example.json
