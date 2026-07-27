@@ -154,12 +154,34 @@ function PreseasonDashboard({ data }) {
   )
 }
 
+const NAV_LINKS = [
+  { label: 'My Team',    url: 'https://fantasy.premierleague.com/my-team',   icon: '👤' },
+  { label: 'Transfers',  url: 'https://fantasy.premierleague.com/transfers',  icon: '🔄' },
+  { label: 'Leagues',    url: 'https://fantasy.premierleague.com/leagues',    icon: '🏆' },
+  { label: 'Fixtures',   url: 'https://fantasy.premierleague.com/fixtures',   icon: '📅' },
+  { label: 'Statistics', url: 'https://fantasy.premierleague.com/statistics', icon: '📊' },
+  { label: 'The Scout',  url: 'https://fantasy.premierleague.com/the-scout',  icon: '🔍' },
+]
+
 function App() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [data, setData] = useState(null)
   const [page, setPage] = useState('main')
+  const [sidebar, setSidebar] = useState({ open: false, url: null, label: '' })
+
+  function openSidebar(link) {
+    setSidebar(s => ({ ...s, url: link.url, label: link.label }))
+  }
+
+  function toggleSidebar() {
+    setSidebar(s => ({ ...s, open: !s.open }))
+  }
+
+  function closeSidebar() {
+    setSidebar({ open: false, url: null, label: '' })
+  }
 
   function extractLeagueId(value) {
     const trimmed = value.trim()
@@ -205,9 +227,12 @@ function App() {
   if (page === 'comparison') {
     return (
       <div className="fpl-page">
-        <SiteHeader />
-        <div className="fpl-content">
-          <ComparisonPage onBack={() => setPage('main')} />
+        <SiteHeader sidebar={sidebar} onToggle={toggleSidebar} />
+        <div className={`fpl-body${sidebar.open ? ' sidebar-open' : ''}`}>
+          <Sidebar sidebar={sidebar} onNavClick={openSidebar} onClose={closeSidebar} />
+          <div className="fpl-content">
+            <ComparisonPage onBack={() => setPage('main')} />
+          </div>
         </div>
       </div>
     )
@@ -215,10 +240,14 @@ function App() {
 
   return (
     <div className="fpl-page">
-      <SiteHeader />
+      <SiteHeader sidebar={sidebar} onToggle={toggleSidebar} />
 
-      {/* Hero / search */}
-      <div className="fpl-hero">
+      <div className={`fpl-body${sidebar.open ? ' sidebar-open' : ''}`}>
+        <Sidebar sidebar={sidebar} onNavClick={openSidebar} onClose={closeSidebar} />
+        <div className="fpl-main-col">
+
+        {/* Hero / search */}
+        <div className="fpl-hero">
         <div className="fpl-hero-inner">
           <h1 className="fpl-hero-title">FPL Advisor</h1>
           <p className="fpl-hero-sub">Transfer suggestions &amp; captain picks for every team in your league</p>
@@ -321,11 +350,13 @@ function App() {
       <footer className="fpl-footer">
         <p>FPL Advisor — unofficial tool, not affiliated with the Premier League.</p>
       </footer>
+        </div>{/* end fpl-main-col */}
+      </div>{/* end fpl-body */}
     </div>
   )
 }
 
-function SiteHeader() {
+function SiteHeader({ sidebar, onToggle }) {
   return (
     <nav className="fpl-nav">
       <div className="fpl-nav-inner">
@@ -333,13 +364,56 @@ function SiteHeader() {
           <span className="fpl-nav-ball">⚽</span>
           <span className="fpl-nav-brand">Fantasy<strong>Advisor</strong></span>
         </div>
-        <div className="fpl-nav-links">
-          <a href="https://fantasy.premierleague.com" target="_blank" rel="noreferrer">Official FPL</a>
-          <a href="https://fantasy.premierleague.com/statistics" target="_blank" rel="noreferrer">Statistics</a>
-          <a href="https://fantasy.premierleague.com/fixtures" target="_blank" rel="noreferrer">Fixtures</a>
-        </div>
+        <button
+          className={`fpl-nav-toggle${sidebar.open ? ' active' : ''}`}
+          onClick={onToggle}
+          title={sidebar.open ? 'Close FPL panel' : 'Open FPL panel'}
+        >
+          <span className="fpl-nav-toggle-icon">{sidebar.open ? '✕' : '☰'}</span>
+          <span className="fpl-nav-toggle-label">FPL</span>
+        </button>
       </div>
     </nav>
+  )
+}
+
+function Sidebar({ sidebar, onNavClick, onClose }) {
+  return (
+    <aside className={`fpl-sidebar${sidebar.open ? ' open' : ''}`}>
+      <div className="fpl-sidebar-header">
+        <span className="fpl-sidebar-title">Official FPL</span>
+        <button className="fpl-sidebar-close" onClick={onClose} title="Close">✕</button>
+      </div>
+
+      {/* Link menu */}
+      <nav className="fpl-sidebar-menu">
+        {NAV_LINKS.map(link => (
+          <button
+            key={link.url}
+            className={`fpl-sidebar-link${sidebar.url === link.url ? ' active' : ''}`}
+            onClick={() => onNavClick(link)}
+          >
+            <span className="fpl-sidebar-link-icon">{link.icon}</span>
+            {link.label}
+          </button>
+        ))}
+      </nav>
+
+      {/* Iframe panel */}
+      {sidebar.url ? (
+        <iframe
+          key={sidebar.url}
+          src={sidebar.url}
+          title={sidebar.label}
+          className="fpl-sidebar-iframe"
+          sandbox="allow-scripts allow-same-origin allow-forms"
+        />
+      ) : (
+        <div className="fpl-sidebar-placeholder">
+          <span>👆 Select a page above</span>
+        </div>
+      )}
+    </aside>
   )
 }
 

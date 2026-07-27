@@ -486,12 +486,191 @@ thead .sticky-col { background: rgba(45,0,69,0.96); z-index: 2; }
 
 /* ── Responsive ── */
 @media (max-width: 700px) {
+
+/* ══ SIDEBAR + BODY LAYOUT ══ */
+
+.fpl-body {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.fpl-sidebar {
+  width: 0;
+  min-width: 0;
+  background: #1a0024;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width 0.28s cubic-bezier(0.4,0,0.2,1),
+              min-width 0.28s cubic-bezier(0.4,0,0.2,1);
+  flex-shrink: 0;
+  position: sticky;
+  top: 56px;          /* height of nav bar */
+  height: calc(100vh - 56px);
+}
+
+.fpl-sidebar.open {
+  width: 420px;
+  min-width: 300px;
+}
+
+.fpl-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #240030;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.fpl-sidebar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--fpl-white);
+}
+
+.fpl-sidebar-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+  line-height: 1;
+}
+.fpl-sidebar-close:hover {
+  color: var(--fpl-white);
+  background: rgba(255,255,255,0.08);
+}
+
+.fpl-sidebar-iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: #fff;
+}
+
+/* Main content grows to fill remaining space */
+.fpl-main-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Hero inside body fills width of the main column */
+.fpl-main-col .fpl-hero {
+  width: 100%;
+}
+
+/* ── Nav toggle button ── */
+.fpl-nav-toggle {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--fpl-grey);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.fpl-nav-toggle:hover {
+  color: var(--fpl-white);
+  background: rgba(255,255,255,0.13);
+  border-color: rgba(255,255,255,0.25);
+}
+
+.fpl-nav-toggle.active {
+  color: var(--fpl-green);
+  background: rgba(0,255,135,0.1);
+  border-color: rgba(0,255,135,0.3);
+}
+
+.fpl-nav-toggle-icon { font-size: 1rem; line-height: 1; }
+.fpl-nav-toggle-label { font-size: 0.82rem; letter-spacing: 0.3px; }
+
+/* ── Sidebar menu ── */
+.fpl-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.fpl-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  color: var(--fpl-grey);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+  width: 100%;
+}
+
+.fpl-sidebar-link:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--fpl-white);
+}
+
+.fpl-sidebar-link.active {
+  background: rgba(0,255,135,0.1);
+  color: var(--fpl-green);
+}
+
+.fpl-sidebar-link-icon { font-size: 1rem; flex-shrink: 0; }
+
+.fpl-sidebar-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.2);
+  font-size: 0.9rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
   .fpl-hero-title { font-size: 2rem; }
-  .fpl-nav-links  { display: none; }
+  .fpl-nav-toggle-label { display: none; }
   .scout-grid     { grid-template-columns: 1fr 1fr; }
   .countdown-grid { gap: 8px; }
   .countdown-unit { min-width: 54px; padding: 8px 10px; }
   .countdown-unit span { font-size: 1.5rem; }
   .fdr-bar-track  { min-width: 60px; }
+
+  /* Sidebar overlays on mobile instead of pushing */
+  .fpl-sidebar.open {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    height: calc(100vh - 56px);
+    width: 92vw !important;
+    min-width: unset !important;
+    z-index: 200;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.6);
+  }
 }
 
