@@ -5,12 +5,3 @@ venv/
 .venv/
 frontend/node_modules/
 frontend/dist/
-
-# vscode
-.vscode
-!.vscode/settings.example.json
-
-# node
-node_modules
-package-lock.json
-pnpm-lock.yaml

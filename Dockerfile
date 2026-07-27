@@ -1,22 +1,15 @@
-FROM node:24.18.0-slim AS frontend-build
-RUN corepack enable
+FROM node:20-slim AS frontend-build
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
-RUN pnpm i
+RUN npm install
 COPY frontend/ ./
-RUN pnpm build
+RUN npm run build
 
-FROM ghcr.io/astral-sh/uv:0.11.32-python3.13-trixie AS backend-build
+FROM python:3.11-slim
 WORKDIR /app
-COPY backend/pyproject.toml backend/uv.lock README.md ./
-RUN uv sync --locked --no-dev
-COPY backend .
-RUN uv sync --locked --no-dev
-
-FROM python:3.13-slim
-ENV PATH="/app/.venv/bin:$PATH"
-COPY --from=backend-build /app /app
-WORKDIR /app
-COPY --from=frontend-build /app/frontend/dist ./src/app/static
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/ ./backend/
+COPY --from=frontend-build /app/frontend/dist ./frontend/dist
 EXPOSE 10000
-CMD ["sh", "-c", "exec gunicorn --bind 0.0.0.0:${PORT:-10000} 'app:create_app()'"]
+CMD ["gunicorn", "backend.app:app", "--bind", "0.0.0.0:10000"]
