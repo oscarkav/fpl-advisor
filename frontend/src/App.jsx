@@ -155,12 +155,12 @@ function PreseasonDashboard({ data }) {
 }
 
 const NAV_LINKS = [
-  { label: 'My Team',    url: 'https://fantasy.premierleague.com/my-team',   icon: '👤' },
-  { label: 'Transfers',  url: 'https://fantasy.premierleague.com/transfers',  icon: '🔄' },
-  { label: 'Leagues',    url: 'https://fantasy.premierleague.com/leagues',    icon: '🏆' },
-  { label: 'Fixtures',   url: 'https://fantasy.premierleague.com/fixtures',   icon: '📅' },
-  { label: 'Statistics', url: 'https://fantasy.premierleague.com/statistics', icon: '📊' },
-  { label: 'The Scout',  url: 'https://fantasy.premierleague.com/the-scout',  icon: '🔍' },
+  { label: 'My Team',    url: 'https://fantasy.premierleague.com/my-team' },
+  { label: 'Transfers',  url: 'https://fantasy.premierleague.com/transfers' },
+  { label: 'Leagues',    url: 'https://fantasy.premierleague.com/leagues' },
+  { label: 'Fixtures',   url: 'https://fantasy.premierleague.com/fixtures' },
+  { label: 'Statistics', url: 'https://fantasy.premierleague.com/statistics' },
+  { label: 'The Scout',  url: 'https://fantasy.premierleague.com/the-scout' },
 ]
 
 function App() {
@@ -393,7 +393,6 @@ function Sidebar({ sidebar, onNavClick, onClose }) {
             className={`fpl-sidebar-link${sidebar.url === link.url ? ' active' : ''}`}
             onClick={() => onNavClick(link)}
           >
-            <span className="fpl-sidebar-link-icon">{link.icon}</span>
             {link.label}
           </button>
         ))}

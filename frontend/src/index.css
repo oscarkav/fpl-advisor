@@ -555,7 +555,8 @@ thead .sticky-col { background: rgba(45,0,69,0.96); z-index: 2; }
   flex: 1;
   width: 100%;
   border: none;
-  background: #fff;
+  background: var(--fpl-purple);
+  color-scheme: dark;
 }
 
 /* Main content grows to fill remaining space */
@@ -616,7 +617,6 @@ thead .sticky-col { background: rgba(45,0,69,0.96); z-index: 2; }
 .fpl-sidebar-link {
   display: flex;
   align-items: center;
-  gap: 10px;
   padding: 10px 12px;
   border-radius: 6px;
   border: none;
