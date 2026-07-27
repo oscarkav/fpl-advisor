@@ -373,6 +373,56 @@ def compute_comparison(picks_data, players, transfers, captain_suggestion, gw_li
     }
 
 
+def build_preseason_data(players, fixture_difficulty, teams_map):
+    """Build pre-season scout data when no gameweek picks are available."""
+    all_players = list(players.values())
+
+    # Score all available players
+    for p in all_players:
+        p["score"] = compute_player_score(p, fixture_difficulty)
+
+    # Most popular globally (highest ownership %)
+    popular_picks = sorted(all_players, key=lambda p: p["selected_by"], reverse=True)[:8]
+
+    # Best value picks: available, max £8.5m, high composite score
+    scout_picks = sorted(
+        [p for p in all_players if p["status"] == "a" and p["price"] <= 8.5],
+        key=lambda p: p["score"],
+        reverse=True
+    )[:8]
+
+    def pick_to_dict(p):
+        return {
+            "id": p["id"],
+            "name": p["name"],
+            "team": p["team_name"],
+            "position": p["position"],
+            "price": p["price"],
+            "form": p["form"],
+            "selected_by": p["selected_by"],
+            "score": p["score"],
+            "ict_index": p["ict_index"],
+        }
+
+    # FDR leaderboard: all PL clubs sorted by average upcoming fixture difficulty
+    fdr_leaderboard = []
+    for t_id, team_info in teams_map.items():
+        avg = round(fixture_difficulty.get(t_id, 3.0), 2)
+        fdr_leaderboard.append({
+            "team_id": t_id,
+            "short_name": team_info["short_name"],
+            "name": team_info["name"],
+            "avg_difficulty": avg,
+        })
+    fdr_leaderboard.sort(key=lambda x: x["avg_difficulty"])
+
+    return {
+        "popular_picks": [pick_to_dict(p) for p in popular_picks],
+        "scout_picks": [pick_to_dict(p) for p in scout_picks],
+        "fdr_leaderboard": fdr_leaderboard,
+    }
+
+
 @app.route("/api/league/<int:league_id>")
 def api_league(league_id):
     """Main endpoint: get league teams with transfer and captain suggestions."""
@@ -382,6 +432,10 @@ def api_league(league_id):
         players, teams_map = build_player_map(bootstrap)
         fixtures = get_fixtures()
         fixture_difficulty = get_upcoming_fixture_difficulty(fixtures, teams_map)
+
+        # Extract deadline for current/next gameweek
+        gw_event = next((ev for ev in bootstrap["events"] if ev["id"] == current_gw), None)
+        deadline = gw_event["deadline_time"] if gw_event else None
 
         # Get live GW points for accurate comparison
         try:
@@ -393,6 +447,18 @@ def api_league(league_id):
         league_data = get_league_standings(league_id)
         league_name = league_data["league"]["name"]
         standings = league_data["standings"]["results"]
+
+        # Pre-season: no picks available yet
+        if len(standings) == 0:
+            preseason_data = build_preseason_data(players, fixture_difficulty, teams_map)
+            return jsonify({
+                "league_name": league_name,
+                "gameweek": current_gw,
+                "deadline": deadline,
+                "is_pre_season": True,
+                "teams": [],
+                "preseason_data": preseason_data,
+            })
 
         results = []
         for entry in standings[:20]:  # Limit to 20 teams
@@ -461,6 +527,8 @@ def api_league(league_id):
         return jsonify({
             "league_name": league_name,
             "gameweek": current_gw,
+            "deadline": deadline,
+            "is_pre_season": False,
             "teams": results,
         })
 
