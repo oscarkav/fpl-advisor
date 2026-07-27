@@ -5,3 +5,12 @@ venv/
 .venv/
 frontend/node_modules/
 frontend/dist/
+.ruff_cache
+
+# vscode
+.vscode
+!.vscode/settings.example.json
+
+# node
+node_modules
+package-lock.json
