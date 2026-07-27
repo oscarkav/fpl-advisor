@@ -229,10 +229,10 @@ function App() {
       <div className="fpl-page">
         <SiteHeader sidebar={sidebar} onToggle={toggleSidebar} />
         <div className={`fpl-body${sidebar.open ? ' sidebar-open' : ''}`}>
-          <Sidebar sidebar={sidebar} onNavClick={openSidebar} onClose={closeSidebar} />
           <div className="fpl-content">
             <ComparisonPage onBack={() => setPage('main')} />
           </div>
+          <Sidebar sidebar={sidebar} onNavClick={openSidebar} onClose={closeSidebar} />
         </div>
       </div>
     )
@@ -243,7 +243,6 @@ function App() {
       <SiteHeader sidebar={sidebar} onToggle={toggleSidebar} />
 
       <div className={`fpl-body${sidebar.open ? ' sidebar-open' : ''}`}>
-        <Sidebar sidebar={sidebar} onNavClick={openSidebar} onClose={closeSidebar} />
         <div className="fpl-main-col">
 
         {/* Hero / search */}
@@ -351,6 +350,7 @@ function App() {
         <p>FPL Advisor — unofficial tool, not affiliated with the Premier League.</p>
       </footer>
         </div>{/* end fpl-main-col */}
+        <Sidebar sidebar={sidebar} onNavClick={openSidebar} onClose={closeSidebar} />
       </div>{/* end fpl-body */}
     </div>
   )
