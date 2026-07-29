@@ -172,11 +172,11 @@ function App() {
   const [sidebar, setSidebar] = useState({ open: false, url: null, label: '' })
 
   function openSidebar(link) {
-    setSidebar(s => ({ ...s, url: link.url, label: link.label }))
-  }
-
-  function toggleSidebar() {
-    setSidebar(s => ({ ...s, open: !s.open }))
+    setSidebar(s =>
+      s.open && s.url === link.url
+        ? { open: false, url: null, label: '' }
+        : { open: true, url: link.url, label: link.label }
+    )
   }
 
   function closeSidebar() {
@@ -227,12 +227,12 @@ function App() {
   if (page === 'comparison') {
     return (
       <div className="fpl-page">
-        <SiteHeader sidebar={sidebar} onToggle={toggleSidebar} />
+        <SiteHeader sidebar={sidebar} onNavClick={openSidebar} />
         <div className={`fpl-body${sidebar.open ? ' sidebar-open' : ''}`}>
           <div className="fpl-content">
             <ComparisonPage onBack={() => setPage('main')} />
           </div>
-          <Sidebar sidebar={sidebar} onNavClick={openSidebar} onClose={closeSidebar} />
+          <Sidebar sidebar={sidebar} onClose={closeSidebar} />
         </div>
       </div>
     )
@@ -240,7 +240,7 @@ function App() {
 
   return (
     <div className="fpl-page">
-      <SiteHeader sidebar={sidebar} onToggle={toggleSidebar} />
+      <SiteHeader sidebar={sidebar} onNavClick={openSidebar} />
 
       <div className={`fpl-body${sidebar.open ? ' sidebar-open' : ''}`}>
         <div className="fpl-main-col">
@@ -350,13 +350,13 @@ function App() {
         <p>FPL Advisor — unofficial tool, not affiliated with the Premier League.</p>
       </footer>
         </div>{/* end fpl-main-col */}
-        <Sidebar sidebar={sidebar} onNavClick={openSidebar} onClose={closeSidebar} />
+          <Sidebar sidebar={sidebar} onClose={closeSidebar} />
       </div>{/* end fpl-body */}
     </div>
   )
 }
 
-function SiteHeader({ sidebar, onToggle }) {
+function SiteHeader({ sidebar, onNavClick }) {
   return (
     <nav className="fpl-nav">
       <div className="fpl-nav-inner">
@@ -364,53 +364,37 @@ function SiteHeader({ sidebar, onToggle }) {
           <span className="fpl-nav-ball">⚽</span>
           <span className="fpl-nav-brand">Fantasy<strong>Advisor</strong></span>
         </div>
-        <button
-          className={`fpl-nav-toggle${sidebar.open ? ' active' : ''}`}
-          onClick={onToggle}
-          title={sidebar.open ? 'Close FPL panel' : 'Open FPL panel'}
-        >
-          <span className="fpl-nav-toggle-icon">{sidebar.open ? '✕' : '☰'}</span>
-          <span className="fpl-nav-toggle-label">FPL</span>
-        </button>
+        <div className="fpl-nav-links">
+          {NAV_LINKS.map(link => (
+            <button
+              key={link.url}
+              className={`fpl-nav-link${sidebar.open && sidebar.url === link.url ? ' active' : ''}`}
+              onClick={() => onNavClick(link)}
+            >
+              {link.label}
+            </button>
+          ))}
+        </div>
       </div>
     </nav>
   )
 }
 
-function Sidebar({ sidebar, onNavClick, onClose }) {
+function Sidebar({ sidebar, onClose }) {
   return (
     <aside className={`fpl-sidebar${sidebar.open ? ' open' : ''}`}>
       <div className="fpl-sidebar-header">
-        <span className="fpl-sidebar-title">Official FPL</span>
+        <span className="fpl-sidebar-title">{sidebar.label}</span>
         <button className="fpl-sidebar-close" onClick={onClose} title="Close">✕</button>
       </div>
-
-      {/* Link menu */}
-      <nav className="fpl-sidebar-menu">
-        {NAV_LINKS.map(link => (
-          <button
-            key={link.url}
-            className={`fpl-sidebar-link${sidebar.url === link.url ? ' active' : ''}`}
-            onClick={() => onNavClick(link)}
-          >
-            {link.label}
-          </button>
-        ))}
-      </nav>
-
-      {/* Iframe panel */}
-      {sidebar.url ? (
+      {sidebar.url && (
         <iframe
           key={sidebar.url}
           src={sidebar.url}
           title={sidebar.label}
           className="fpl-sidebar-iframe"
-          sandbox="allow-scripts allow-same-origin allow-forms"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
         />
-      ) : (
-        <div className="fpl-sidebar-placeholder">
-          <span>👆 Select a page above</span>
-        </div>
       )}
     </aside>
   )
