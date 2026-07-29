@@ -163,25 +163,32 @@ const NAV_LINKS = [
   { label: 'The Scout',  url: 'https://fantasy.premierleague.com/the-scout' },
 ]
 
+function SiteHeader() {
+  return (
+    <nav className="fpl-nav">
+      <div className="fpl-nav-inner">
+        <div className="fpl-nav-logo">
+          <span className="fpl-nav-ball">⚽</span>
+          <span className="fpl-nav-brand">Fantasy<strong>Advisor</strong></span>
+        </div>
+        <div className="fpl-nav-links">
+          {NAV_LINKS.map(link => (
+            <a key={link.url} href={link.url} target="_blank" rel="noreferrer" className="fpl-nav-link">
+              {link.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </nav>
+  )
+}
+
 function App() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [data, setData] = useState(null)
   const [page, setPage] = useState('main')
-  const [sidebar, setSidebar] = useState({ open: false, url: null, label: '' })
-
-  function openSidebar(link) {
-    setSidebar(s =>
-      s.open && s.url === link.url
-        ? { open: false, url: null, label: '' }
-        : { open: true, url: link.url, label: link.label }
-    )
-  }
-
-  function closeSidebar() {
-    setSidebar({ open: false, url: null, label: '' })
-  }
 
   function extractLeagueId(value) {
     const trimmed = value.trim()
@@ -227,12 +234,9 @@ function App() {
   if (page === 'comparison') {
     return (
       <div className="fpl-page">
-        <SiteHeader sidebar={sidebar} onNavClick={openSidebar} />
-        <div className={`fpl-body${sidebar.open ? ' sidebar-open' : ''}`}>
-          <div className="fpl-content">
-            <ComparisonPage onBack={() => setPage('main')} />
-          </div>
-          <Sidebar sidebar={sidebar} onClose={closeSidebar} />
+        <SiteHeader />
+        <div className="fpl-content">
+          <ComparisonPage onBack={() => setPage('main')} />
         </div>
       </div>
     )
@@ -240,10 +244,9 @@ function App() {
 
   return (
     <div className="fpl-page">
-      <SiteHeader sidebar={sidebar} onNavClick={openSidebar} />
+      <SiteHeader />
 
-      <div className={`fpl-body${sidebar.open ? ' sidebar-open' : ''}`}>
-        <div className="fpl-main-col">
+      <div className="fpl-body">
 
         {/* Hero / search */}
         <div className="fpl-hero">
@@ -349,54 +352,8 @@ function App() {
       <footer className="fpl-footer">
         <p>FPL Advisor — unofficial tool, not affiliated with the Premier League.</p>
       </footer>
-        </div>{/* end fpl-main-col */}
-          <Sidebar sidebar={sidebar} onClose={closeSidebar} />
       </div>{/* end fpl-body */}
     </div>
-  )
-}
-
-function SiteHeader({ sidebar, onNavClick }) {
-  return (
-    <nav className="fpl-nav">
-      <div className="fpl-nav-inner">
-        <div className="fpl-nav-logo">
-          <span className="fpl-nav-ball">⚽</span>
-          <span className="fpl-nav-brand">Fantasy<strong>Advisor</strong></span>
-        </div>
-        <div className="fpl-nav-links">
-          {NAV_LINKS.map(link => (
-            <button
-              key={link.url}
-              className={`fpl-nav-link${sidebar.open && sidebar.url === link.url ? ' active' : ''}`}
-              onClick={() => onNavClick(link)}
-            >
-              {link.label}
-            </button>
-          ))}
-        </div>
-      </div>
-    </nav>
-  )
-}
-
-function Sidebar({ sidebar, onClose }) {
-  return (
-    <aside className={`fpl-sidebar${sidebar.open ? ' open' : ''}`}>
-      <div className="fpl-sidebar-header">
-        <span className="fpl-sidebar-title">{sidebar.label}</span>
-        <button className="fpl-sidebar-close" onClick={onClose} title="Close">✕</button>
-      </div>
-      {sidebar.url && (
-        <iframe
-          key={sidebar.url}
-          src={sidebar.url}
-          title={sidebar.label}
-          className="fpl-sidebar-iframe"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-        />
-      )}
-    </aside>
   )
 }
 
